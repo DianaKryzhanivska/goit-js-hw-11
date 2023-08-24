@@ -27,7 +27,6 @@ async function onFormSubmit(e) {
   e.preventDefault();
   window.scrollTo({ top: 0 });
   const query = refs.inputElem.value.trim();
-  // console.log(query);
   pixabayApi.query = query;
   pixabayApi.page = 1;
 
