@@ -27,6 +27,7 @@ async function onFormSubmit(e) {
   e.preventDefault();
   window.scrollTo({ top: 0 });
   const query = refs.inputElem.value.trim();
+  // console.log(query);
   pixabayApi.query = query;
   pixabayApi.page = 1;
 
@@ -37,7 +38,14 @@ async function onFormSubmit(e) {
     renderImages(data.hits);
     lightbox.refresh();
 
-    if (data.totalHits > 0) {
+    if (query.trim() === '' && data.totalHits > 0) {
+      errorShow();
+      refs.galleryList.innerHTML = '';
+      refs.btnLoadMore.classList.add('visually-hidden');
+      refs.formElem.reset();
+    }
+
+    if (data.totalHits > 0 && query.trim() !== '') {
       Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`, {
         timeout: 3000,
       });
@@ -52,6 +60,7 @@ async function onFormSubmit(e) {
     if (data.totalHits === 0) {
       errorShow();
     }
+
     updateStatusBtn();
   } catch (error) {
     console.log(error);
