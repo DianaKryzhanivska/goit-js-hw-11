@@ -23,13 +23,15 @@ refs.btnLoadMore.classList.add('visually-hidden');
 onScroll();
 onToTopBtn();
 
-function onFormSubmit(e) {
+async function onFormSubmit(e) {
   e.preventDefault();
   window.scrollTo({ top: 0 });
   const query = refs.inputElem.value.trim();
   pixabayApi.query = query;
   pixabayApi.page = 1;
-  pixabayApi.getImages().then(data => {
+
+  try {
+    const data = await pixabayApi.getImages();
     maxPage = Math.ceil(data.totalHits / pixabayApi.per_page);
     refs.galleryList.innerHTML = '';
     renderImages(data.hits);
@@ -51,7 +53,9 @@ function onFormSubmit(e) {
       errorShow();
     }
     updateStatusBtn();
-  });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function updateStatusBtn() {
@@ -64,9 +68,11 @@ function updateStatusBtn() {
   }
 }
 
-function onLoadMore(e) {
+async function onLoadMore(e) {
   pixabayApi.page += 1;
-  pixabayApi.getImages().then(data => {
+
+  try {
+    const data = await pixabayApi.getImages();
     renderImages(data.hits);
     lightbox.refresh();
     refs.btnLoadMore.disabled = false;
@@ -81,7 +87,9 @@ function onLoadMore(e) {
     });
 
     updateStatusBtn();
-  });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function templateImageCard({

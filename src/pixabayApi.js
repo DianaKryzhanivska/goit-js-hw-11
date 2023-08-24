@@ -10,7 +10,7 @@ export class PixabayApi {
     this.per_page = 40;
   }
 
-  getImages() {
+  async getImages() {
     const PARAMS = new URLSearchParams({
       key: API_KEY,
       q: this.query,
@@ -22,9 +22,13 @@ export class PixabayApi {
     });
 
     const url = `${BASE_URL}?${PARAMS}`;
-    return fetch(url)
-      .then(response => response.json())
-      .catch(err => errorShow());
+
+    try {
+      const response = await fetch(url);
+      return response.json();
+    } catch (error) {
+      errorShow();
+    }
   }
 
   getPerPage() {
