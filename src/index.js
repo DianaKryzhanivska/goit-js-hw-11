@@ -3,6 +3,7 @@ import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { PixabayApi } from './pixabayApi.js';
+import { onScroll, onToTopBtn } from './scroll.js';
 
 const refs = {
   formElem: document.querySelector('.search-form'),
@@ -19,9 +20,13 @@ refs.formElem.addEventListener('submit', onFormSubmit);
 refs.btnLoadMore.addEventListener('click', onLoadMore);
 refs.btnLoadMore.classList.add('visually-hidden');
 
+onScroll();
+onToTopBtn();
+
 function onFormSubmit(e) {
   e.preventDefault();
-  const query = refs.inputElem.value;
+  window.scrollTo({ top: 0 });
+  const query = refs.inputElem.value.trim();
   pixabayApi.query = query;
   pixabayApi.page = 1;
   pixabayApi.getImages().then(data => {
@@ -113,7 +118,6 @@ function templateImageCard({
 function renderImages(images) {
   const markup = images.map(templateImageCard).join('');
   refs.galleryList.insertAdjacentHTML('beforeend', markup);
-  //   refs.galleryList.innerHTML = markup;
 }
 
 function errorShow() {
